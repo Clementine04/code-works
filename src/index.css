@@ -1,0 +1,176 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --bg: #f4f6fb;
+  --brand: #274bf5;
+  --violet: #7c3aed;
+  --cyan: #0891b2;
+}
+
+* {
+  -webkit-tap-highlight-color: transparent;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: hidden;
+}
+
+body {
+  margin: 0;
+  background-color: var(--bg);
+  background-image: radial-gradient(120% 90% at 100% 0%, #eef2ff 0%, transparent 45%),
+    radial-gradient(120% 90% at 0% 0%, #ecfeff 0%, transparent 40%);
+  background-repeat: no-repeat;
+  color: #0b1120;
+  font-family: "Inter", system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow-x: hidden;
+  text-rendering: optimizeLegibility;
+}
+
+::selection {
+  background: rgba(59, 107, 255, 0.2);
+  color: #1e1b4b;
+}
+
+/* Custom scrollbar */
+::-webkit-scrollbar {
+  width: 10px;
+}
+::-webkit-scrollbar-track {
+  background: #e7ebf3;
+}
+::-webkit-scrollbar-thumb {
+  background: linear-gradient(180deg, #3b6bff, #8b5cf6);
+  border-radius: 999px;
+  border: 2px solid #e7ebf3;
+}
+
+@layer components {
+  .glass {
+    @apply border border-white/70 bg-white/75 shadow-[0_8px_30px_-12px_rgba(15,23,42,0.18)] backdrop-blur-md;
+  }
+  .glass-strong {
+    @apply border border-white/80 bg-white/85 shadow-[0_12px_40px_-14px_rgba(15,23,42,0.22)] backdrop-blur-md;
+  }
+  .container-px {
+    @apply px-5 sm:px-8 lg:px-12;
+  }
+  .section {
+    @apply relative mx-auto w-full max-w-7xl container-px;
+  }
+  .surface {
+    @apply border border-slate-200/80 bg-white shadow-[0_18px_50px_-30px_rgba(15,23,42,0.35)];
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+  .text-gradient {
+    @apply bg-gradient-to-r from-slate-900 via-slate-900 to-brand-700 bg-clip-text text-transparent;
+  }
+  .text-gradient-brand {
+    background-image: linear-gradient(110deg, #274bf5, #7c3aed 45%, #0891b2);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+  .mask-fade-b {
+    -webkit-mask-image: linear-gradient(to bottom, #000 70%, transparent);
+    mask-image: linear-gradient(to bottom, #000 70%, transparent);
+  }
+  .grid-bg {
+    background-image: linear-gradient(rgba(15, 23, 42, 0.05) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(15, 23, 42, 0.05) 1px, transparent 1px);
+    background-size: 60px 60px;
+  }
+  .dot-bg {
+    background-image: radial-gradient(rgba(15, 23, 42, 0.1) 1px, transparent 1px);
+    background-size: 22px 22px;
+  }
+  .no-scrollbar::-webkit-scrollbar {
+    display: none;
+  }
+  .no-scrollbar {
+    -ms-overflow-style: none;
+    scrollbar-width: none;
+  }
+  /* Layer-promotion helper for cheap GPU-composited transforms. */
+  .gpu {
+    transform: translateZ(0);
+    will-change: transform;
+    backface-visibility: hidden;
+  }
+  /* Cursor-following spotlight driven by CSS vars (no per-frame strings). */
+  .tilt-glow {
+    background: radial-gradient(
+      380px circle at var(--mx, 50%) var(--my, 50%),
+      rgba(59, 107, 255, 0.16),
+      transparent 45%
+    );
+  }
+}
+
+/* ----- Performance tiers ----- */
+/* Low-end / reduced-motion: kill backdrop blur and pause ambient loops. */
+.perf-low [class*="backdrop-blur"] {
+  -webkit-backdrop-filter: none !important;
+  backdrop-filter: none !important;
+}
+.perf-low .glass,
+.perf-low .glass-strong {
+  background: rgba(255, 255, 255, 0.92);
+}
+.perf-low .animate-aurora,
+.perf-low .animate-float,
+.perf-low .animate-grid-pan,
+.perf-low .animate-spin-slow {
+  animation: none !important;
+}
+.perf-mid .animate-aurora {
+  animation-duration: 28s;
+}
+/* Skip rendering offscreen sections on low-end (Lenis is off there, so this
+   doesn't fight smooth-scroll height calculations). */
+.perf-low .cv-auto {
+  content-visibility: auto;
+  contain-intrinsic-size: 1px 900px;
+}
+
+/* Branded loader */
+.loader-bar {
+  background: linear-gradient(90deg, #274bf5, #8b5cf6, #22d3ee);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
+}
